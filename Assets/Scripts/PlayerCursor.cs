@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerCursor : MonoBehaviour
 {
+    
     public int playerID;
     private PlayerInput player;
     private Rigidbody2D body;
@@ -21,11 +22,11 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private List<Star> nearbyStars = new List<Star>();
     private Star targetedStar;
-    private Star selectedStar;
 
     // Select variables
     [SerializeField]
     private SelectCursor selectCursorPrefab;
+    private SelectCursor select;
     
     
     private void Awake() {
@@ -80,11 +81,48 @@ public class PlayerCursor : MonoBehaviour
         return closestStar;
     }
 
-    private void OnMove(InputValue movement) {
-        Vector2 movementVector = movement.Get<Vector2>();
+    private void SelectStar() {
+        bool canSelectStar = !(
+            targetedStar == null ||
+            (
+                targetedStar.playerID >= 0 &&
+                targetedStar.playerID != playerID
+            ) ||
+            (
+                targetedStar.star1 != null && 
+                targetedStar.star2 != null
+            )
+        );
+        if (canSelectStar) {
+            select = Instantiate<SelectCursor>(
+                selectCursorPrefab, 
+                targetedStar.transform.position, 
+                targetedStar.transform.rotation
+            );
+            Debug.Log("Selected star");
+        }
+    }
+
+    private void StartLine() {
+        Destroy(select.gameObject);
+        select = null;
+        Debug.Log("Started line");
+    }
+
+    private void OnMove(InputValue value) {
+        Vector2 movementVector = value.Get<Vector2>();
         velocity = movementVector * movementSpeed;
     }
 
+    private void OnActivate(InputValue value) {
+        if (!value.isPressed) return;
+
+        if (select != null) {
+            StartLine();
+        } else {
+            SelectStar();
+        }
+    }
 
 
 

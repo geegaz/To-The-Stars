@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SelectCursor : MonoBehaviour
 {
-    public int playerID;
-    private float rotationSpeed = 10.0f;
+    public Star star;
+    public float rotationSpeed = 20.0f;
 
     private void Update() {
         transform.Rotate(Vector3.back, rotationSpeed * Time.deltaTime);
