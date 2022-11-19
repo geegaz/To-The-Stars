@@ -7,26 +7,35 @@ public class PlayerCursor : MonoBehaviour
 {
     
     public int playerID;
+    public Color playerColor;
     private PlayerInput player;
     private Rigidbody2D body;
-    
+
     // Movement variables
+    [Header("Movement variables")]
     [SerializeField]
     private float movementSpeed = 10.0f;
     [SerializeField]
     private float lerpSpeed = 0.1f;
     private Vector2 velocity;
     private float lerpTime = 1.0f;
-    
+
     // Stars variables
+    [Header("Stars variables")]
     [SerializeField]
     private List<Star> nearbyStars = new List<Star>();
+    [SerializeField]
     private Star targetedStar;
 
     // Select variables
+    [Header("Tracing variables")]
     [SerializeField]
     private SelectCursor selectCursorPrefab;
+    [SerializeField]
     private SelectCursor select;
+    
+    [SerializeField]
+    private LineTracer lineTracerPrefab;
     
     
     private void Awake() {
@@ -73,7 +82,7 @@ public class PlayerCursor : MonoBehaviour
         {
             Vector3 starPos = nearbyStar.transform.position;
             float starDist = Vector3.Distance(starPos, pos);
-            if (closestStar == null || starDist < closestDistance) {
+            if ((closestStar == null || starDist < closestDistance) && IsValidStar(nearbyStar)) {
                 closestStar = nearbyStar;
                 closestDistance = starDist;
             }
@@ -82,31 +91,42 @@ public class PlayerCursor : MonoBehaviour
     }
 
     private void SelectStar() {
-        bool canSelectStar = !(
-            targetedStar == null ||
-            (
-                targetedStar.playerID >= 0 &&
-                targetedStar.playerID != playerID
-            ) ||
-            (
-                targetedStar.star1 != null && 
-                targetedStar.star2 != null
-            )
-        );
-        if (canSelectStar) {
+        if (targetedStar != null) {
             select = Instantiate<SelectCursor>(
                 selectCursorPrefab, 
                 targetedStar.transform.position, 
                 targetedStar.transform.rotation
             );
+            select.star = targetedStar;
             Debug.Log("Selected star");
         }
     }
 
     private void StartLine() {
-        Destroy(select.gameObject);
-        select = null;
-        Debug.Log("Started line");
+        if (!(targetedStar == null || targetedStar == select.star || targetedStar.connectedStars.Contains(select.star))) {
+
+            LineTracer line = Instantiate(lineTracerPrefab, select.star.transform.position, select.star.transform.rotation);
+            line.startStar = select.star;
+            line.endStar = targetedStar;
+
+            // TODO: Let the LineTracer trace the line
+            select.star.Connect(targetedStar, playerID);
+
+            Destroy(select.gameObject);
+            select = null;
+            Debug.Log("Started line");
+        }
+    }
+
+    private bool IsValidStar(Star target_star, Star compare_star = null) {
+        return (
+            target_star != compare_star &&
+            (
+                target_star.playerID < 0 ||
+                target_star.playerID == playerID
+            ) &&
+            target_star.connectedStars.Count < target_star.connectedStarsMax
+        );
     }
 
     private void OnMove(InputValue value) {

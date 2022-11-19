@@ -167,7 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1195a2f32216b554a8af04e597ed6617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 10
-  lerpSpeed: 0.1
+  playerID: 0
   nearbyStars: []
+  movementSpeed: 10
+  lerpSpeed: 0.01
   selectCursorPrefab: {fileID: 1157548104684318291, guid: 4b4b01f3953769a4aa80228d81fa3658, type: 3}
+  lineTracerPrefab: {fileID: 4693408757141803925, guid: 2dba86caf5a2a0d488b7cd5723d269b3, type: 3}
