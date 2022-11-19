@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerCursor : MonoBehaviour
 {
+    public int playerID;
+    private PlayerInput player;
+    private Rigidbody2D body;
+    
     // Movement variables
     [SerializeField]
     private float movementSpeed = 10.0f;
@@ -17,12 +21,16 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private List<Star> nearbyStars = new List<Star>();
     private Star targetedStar;
-    private Rigidbody2D body;
-    
-    
+    private Star selectedStar;
 
+    // Select variables
+    [SerializeField]
+    private SelectCursor selectCursorPrefab;
+    
+    
     private void Awake() {
         body = GetComponent<Rigidbody2D>();
+        player = GetComponent<PlayerInput>();
     }
 
     private void Update() {
@@ -76,6 +84,9 @@ public class PlayerCursor : MonoBehaviour
         Vector2 movementVector = movement.Get<Vector2>();
         velocity = movementVector * movementSpeed;
     }
+
+
+
 
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log(other + " entered the cursor");

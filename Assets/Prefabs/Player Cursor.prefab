@@ -170,3 +170,4 @@ MonoBehaviour:
   movementSpeed: 10
   lerpSpeed: 0.1
   nearbyStars: []
+  selectCursorPrefab: {fileID: 1157548104684318291, guid: 4b4b01f3953769a4aa80228d81fa3658, type: 3}
