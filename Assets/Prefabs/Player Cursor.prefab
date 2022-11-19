@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7093128648599420274}
   - component: {fileID: 6022612513361147941}
+  - component: {fileID: 5598297038423209443}
+  - component: {fileID: 8020076653990277226}
   - component: {fileID: 7093128648599420272}
   - component: {fileID: 7093128648599420275}
   m_Layer: 0
@@ -86,6 +88,43 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &5598297038423209443
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093128648599420285}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!58 &8020076653990277226
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7093128648599420285}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!114 &7093128648599420272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,3 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1195a2f32216b554a8af04e597ed6617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 10
+  lerpSpeed: 0.1
+  nearbyStars: []

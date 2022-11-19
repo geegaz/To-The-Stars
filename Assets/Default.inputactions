@@ -68,7 +68,7 @@
                     "id": "1a5a7b32-e039-42e2-bafc-0573571c62c0",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "ScaleVector2(x=0.5,y=0.5)",
+                    "processors": "",
                     "groups": "Mouse&Keyboard",
                     "action": "Move",
                     "isComposite": false,

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7785138928052370232}
   - component: {fileID: 7785138928052370234}
   - component: {fileID: 7785138928052370233}
+  - component: {fileID: 4509841903277815012}
   m_Layer: 0
   m_Name: Star
   m_TagString: Untagged
@@ -99,3 +100,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   star1: {fileID: 0}
   star2: {fileID: 0}
+--- !u!58 &4509841903277815012
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7785138928052370231}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
