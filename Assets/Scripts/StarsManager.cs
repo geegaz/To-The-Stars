@@ -56,4 +56,8 @@ public class StarsManager : MonoBehaviour
         }
         return score;
     }
+
+    private void OnStarConnect(Star from, Star to) {
+
+    }
 }

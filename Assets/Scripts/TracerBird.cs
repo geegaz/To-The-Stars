@@ -13,7 +13,7 @@ public class TracerBird : MonoBehaviour
     private List<Sprite>[] animations = new List<Sprite>[2];
 
     [SerializeField]
-    private float previousAnimAffect = 0.2f;
+    private float previousAnimAffect = 0.1f;
     [SerializeField]
     private float framerate = 6.0f;
     

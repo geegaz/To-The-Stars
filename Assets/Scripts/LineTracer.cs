@@ -110,7 +110,7 @@ public class LineTracer : MonoBehaviour
         return gradient;
     }
 
-    public void OnStarConnect() {
+    public void OnStarConnect(Star from, Star to) {
         if (!CanConnectTo(startStar) && !startStar.connectedStars.Contains(endStar)) {
             Debug.Log("Destroying line "+this+", start star got taken over");
             StopLine();

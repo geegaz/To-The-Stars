@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4693408756931779956}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4693408757141803924}
@@ -108,7 +108,7 @@ MonoBehaviour:
   - {fileID: 819646921, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
   - {fileID: -1988028405, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
   - {fileID: 610143373, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
-  previousAnimAffect: 0.2
+  previousAnimAffect: 0.1
   framerate: 8
 --- !u!1 &4693408757141803922
 GameObject:
@@ -197,7 +197,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.049999237
+        value: 0.10000229
         inSlope: 0
         outSlope: 0
         tangentMode: 0

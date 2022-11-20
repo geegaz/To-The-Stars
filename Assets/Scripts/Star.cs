@@ -8,7 +8,7 @@ public class Star : MonoBehaviour
     public int playerID = -1;
     public bool claimed = false;
 
-    public UnityEvent OnConnect = new UnityEvent();
+    public UnityEvent<Star, Star> OnConnect = new UnityEvent<Star, Star>();
 
     public List<Star> connectedStars;
     public int connectedStarsMax = 2;
@@ -29,11 +29,26 @@ public class Star : MonoBehaviour
             otherStar.SetOwner(_playerID);
         }
 
-        if (OnConnect != null) OnConnect.Invoke();
+        if (OnConnect != null) OnConnect.Invoke(this, otherStar);
     }
 
     public void SetOwner(int id) {
         playerID = id;
         render.color = GameManager.GetPlayerColorFromID(playerID);
+    }
+
+    public bool GetNext(Star start, List<Star> list) {
+        foreach (Star star in connectedStars)
+        {
+            if (star != this) {
+                if (star == start) {
+                    return true;
+                } else {
+                    list.Add(star);
+                    return star.GetNext(start, list);
+                }
+            }
+        }
+        return false;
     }
 }
