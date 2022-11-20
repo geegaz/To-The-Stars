@@ -98,7 +98,6 @@ public class PlayerCursor : MonoBehaviour
                 targetedStar.transform.rotation
             );
             select.star = targetedStar;
-            Debug.Log("Selected star");
         }
     }
 
@@ -108,9 +107,7 @@ public class PlayerCursor : MonoBehaviour
             LineTracer line = Instantiate(lineTracerPrefab, select.star.transform.position, select.star.transform.rotation);
             line.startStar = select.star;
             line.endStar = targetedStar;
-
-            // TODO: Let the LineTracer trace the line
-            select.star.Connect(targetedStar, playerID);
+            line.playerID = playerID;
 
             Destroy(select.gameObject);
             select = null;
@@ -144,10 +141,7 @@ public class PlayerCursor : MonoBehaviour
         }
     }
 
-
-
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log(other + " entered the cursor");
         Star starComponent = other.GetComponent<Star>();
         if (!(starComponent == null || nearbyStars.Contains(starComponent))) {
             nearbyStars.Add(starComponent);
@@ -155,7 +149,6 @@ public class PlayerCursor : MonoBehaviour
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-        Debug.Log(other + " exited the cursor");
         Star starComponent = other.GetComponent<Star>();
         if (starComponent != null && nearbyStars.Contains(starComponent)) {
             nearbyStars.Remove(starComponent);
