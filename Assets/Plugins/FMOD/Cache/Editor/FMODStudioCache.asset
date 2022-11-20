@@ -185,6 +185,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1250
+--- !u!114 &-3231296539148191367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Music_Main/Game is Stopping
+  m_EditorClassIdentifier: 
+  Name: Game is Stopping
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2907015507
+    data2: 1722613058
+  Type: 1
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &-1616056267322313292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,12 +232,11 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
-  Parameters:
-  - {fileID: -1550302169627502627}
+  Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2037
---- !u!114 &-1550302169627502627
+  Length: 1888
+--- !u!114 &-1576605490956933711
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,18 +246,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/CloseShape/Players
+  m_Name: parameter:/Game is Stopping
   m_EditorClassIdentifier: 
-  Name: Players
-  StudioPath: 
+  Name: Game is Stopping
+  StudioPath: parameter:/Music/Game is Stopping
   Min: 0
   Max: 1
-  Default: 1
+  Default: 0
   ID:
-    data1: 687048575
-    data2: 3424180761
+    data1: 2907015507
+    data2: 1722613058
   Type: 1
-  IsGlobal: 0
+  IsGlobal: 1
   Labels: []
   Exists: 1
 --- !u!114 &-1304505668139025600
@@ -284,7 +307,9 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: 3468802504054059637}
+  - {fileID: 9040173830270774058}
   MinDistance: 1
   MaxDistance: 20
   Length: 4200
@@ -392,11 +417,12 @@ MonoBehaviour:
   EditorParameters:
   - {fileID: -658332908007487221}
   - {fileID: -1304505668139025600}
+  - {fileID: -1576605490956933711}
   MasterBanks:
   - {fileID: 7584399931346570763}
   StringsBanks:
   - {fileID: 7635530269575603891}
-  cacheTime: 638045601369291895
+  cacheTime: 638045643240895004
   cacheVersion: 131593
 --- !u!114 &1389933143113027641
 MonoBehaviour:
@@ -424,6 +450,7 @@ MonoBehaviour:
   Parameters:
   - {fileID: -1011509099502109161}
   - {fileID: -6867901145889720727}
+  - {fileID: -3231296539148191367}
   MinDistance: 1
   MaxDistance: 20
   Length: 153600
@@ -443,12 +470,36 @@ MonoBehaviour:
   StudioPath: 
   Min: 0
   Max: 1
-  Default: 1
+  Default: 0
   ID:
     data1: 687048575
     data2: 3424180761
   Type: 1
   IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3468802504054059637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/End Start/Game is Stopping
+  m_EditorClassIdentifier: 
+  Name: Game is Stopping
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2907015507
+    data2: 1722613058
+  Type: 1
+  IsGlobal: 1
   Labels: []
   Exists: 1
 --- !u!114 &7584399931346570763
@@ -466,7 +517,7 @@ MonoBehaviour:
   Path: Assets/FMODBank/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638045601369242256
+  lastModified: 638045643240855465
   FileSizes: []
   Exists: 1
 --- !u!114 &7635530269575603891
@@ -484,10 +535,10 @@ MonoBehaviour:
   Path: Assets/FMODBank/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638045601369291895
+  lastModified: 638045643240895004
   FileSizes:
   - Name: 
-    Value: 1478
+    Value: 1532
   Exists: 1
 --- !u!114 &8451126831846205311
 MonoBehaviour:
@@ -516,3 +567,27 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1125
+--- !u!114 &9040173830270774058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/End Start/MusicLayers
+  m_EditorClassIdentifier: 
+  Name: MusicLayers
+  StudioPath: 
+  Min: 0
+  Max: 3
+  Default: 0
+  ID:
+    data1: 2398177755
+    data2: 1344681354
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
