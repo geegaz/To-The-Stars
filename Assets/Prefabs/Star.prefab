@@ -98,8 +98,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032e159a41e8a5a47a268f46056c5322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  star1: {fileID: 0}
-  star2: {fileID: 0}
+  playerID: -1
+  claimed: 0
+  OnConnect:
+    m_PersistentCalls:
+      m_Calls: []
+  connectedStars: []
+  connectedStarsMax: 2
 --- !u!58 &4509841903277815012
 CircleCollider2D:
   m_ObjectHideFlags: 0
