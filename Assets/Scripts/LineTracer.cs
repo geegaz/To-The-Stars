@@ -10,9 +10,11 @@ public class LineTracer : MonoBehaviour
     [SerializeField]
     private ContactFilter2D filter;
     [SerializeField]
+    private float margin = 0.05f;
+    [SerializeField]
     private float speed = 1.0f;
     [SerializeField]
-    private Transform tracer; 
+    private TracerBird tracer; 
 
     private LineRenderer render;
     private EdgeCollider2D col;
@@ -25,14 +27,16 @@ public class LineTracer : MonoBehaviour
     private void Awake() {
         render = GetComponent<LineRenderer>();
         col = GetComponent<EdgeCollider2D>();
-
-        render.colorGradient = CreateGradient(GameManager.GetPlayerColorFromID(playerID));
+        
+        tracer.playerID = playerID;
     }
 
     private void Start() {
         direction = (endStar.transform.position - transform.position).normalized;
         startStar.OnConnect.AddListener(OnStarConnect);
         transform.right = direction;
+
+        render.colorGradient = CreateGradient(GameManager.GetPlayerColorFromID(playerID));
     }
 
     private void FixedUpdate()
@@ -64,12 +68,12 @@ public class LineTracer : MonoBehaviour
     private void UpdateLine() {
         float distance = Vector3.Distance(startStar.transform.position, transform.position);
         
-        render.SetPosition(0, Vector3.zero);
-        render.SetPosition(1, Vector3.left * distance);
+        render.SetPosition(0, Vector3.left * margin);
+        render.SetPosition(1, Vector3.left * (distance - margin * 2.0f));
 
         Vector2[] points = {
-            Vector2.zero,
-            Vector2.left * distance
+            Vector3.left * margin,
+            Vector2.left * (distance - margin * 2.0f)
         };
         col.points = points;
     }
@@ -99,13 +103,15 @@ public class LineTracer : MonoBehaviour
         GradientColorKey[] colorKeys = new GradientColorKey[1];
         GradientAlphaKey[] alphaKeys = new GradientAlphaKey[1];
         colorKeys[0].color = color;
-        //alphaKeys[0].alpha
+        colorKeys[0].time = 0.0f;
+        alphaKeys[0].alpha = color.a;
+        alphaKeys[0].time = 0.0f;
 
         return gradient;
     }
 
     public void OnStarConnect() {
-        if (!CanConnectTo(startStar)) {
+        if (!CanConnectTo(startStar) && !startStar.connectedStars.Contains(endStar)) {
             Debug.Log("Destroying line "+this+", start star got taken over");
             StopLine();
         }
