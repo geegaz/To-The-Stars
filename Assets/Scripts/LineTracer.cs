@@ -26,7 +26,7 @@ public class LineTracer : MonoBehaviour
         render = GetComponent<LineRenderer>();
         col = GetComponent<EdgeCollider2D>();
 
-        render.material.SetColor("_Color", GameManager.GetPlayerColorFromID(playerID));
+        render.colorGradient = CreateGradient(GameManager.GetPlayerColorFromID(playerID));
     }
 
     private void Start() {
@@ -62,10 +62,11 @@ public class LineTracer : MonoBehaviour
     }
 
     private void UpdateLine() {
-        render.SetPosition(0, startStar.transform.position);
-        render.SetPosition(1, transform.position);
+        float distance = Vector3.Distance(startStar.transform.position, transform.position);
         
-        float distance = Vector2.Distance(startStar.transform.position, transform.position);
+        render.SetPosition(0, Vector3.zero);
+        render.SetPosition(1, Vector3.left * distance);
+
         Vector2[] points = {
             Vector2.zero,
             Vector2.left * distance
@@ -83,7 +84,7 @@ public class LineTracer : MonoBehaviour
             startStar.Connect(endStar, playerID);
             // Reposition line
             transform.position = endStar.transform.position;
-            UpdateLine();
+            //UpdateLine();
             // Remove the tracing visual
             Destroy(tracer.gameObject);
             tracer = null;
@@ -91,6 +92,16 @@ public class LineTracer : MonoBehaviour
             Debug.Log("Destroying line "+this+", can't connect to end star");
             StopLine();
         }
+    }
+
+    private Gradient CreateGradient(Color color) {
+        Gradient gradient = new Gradient();
+        GradientColorKey[] colorKeys = new GradientColorKey[1];
+        GradientAlphaKey[] alphaKeys = new GradientAlphaKey[1];
+        colorKeys[0].color = color;
+        //alphaKeys[0].alpha
+
+        return gradient;
     }
 
     public void OnStarConnect() {
