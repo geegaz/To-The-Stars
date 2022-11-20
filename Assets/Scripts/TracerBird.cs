@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class TracerBird : MonoBehaviour
 {
@@ -22,11 +23,15 @@ public class TracerBird : MonoBehaviour
     private int currentAnim = 0;
 
     private SpriteRenderer render;
+    private StudioParameterTrigger emitter;
 
     private void Awake() {
         render = GetComponent<SpriteRenderer>();
+        emitter = GetComponent<StudioParameterTrigger>();
         animations[0] = idleFrames;
         animations[1] = flapFrames;
+
+        // TODO: Set Player parameter in FMOD from playerID
     }
 
     private void Start() {
