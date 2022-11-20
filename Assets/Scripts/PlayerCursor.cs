@@ -7,8 +7,8 @@ public class PlayerCursor : MonoBehaviour
 {
     
     public int playerID;
-    public Color playerColor;
     private PlayerInput player;
+    private SpriteRenderer render;
     private Rigidbody2D body;
 
     // Movement variables
@@ -16,7 +16,7 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private float movementSpeed = 10.0f;
     [SerializeField]
-    private float lerpSpeed = 0.1f;
+    private float lerpSpeed = 10f;
     private Vector2 velocity;
     private float lerpTime = 1.0f;
 
@@ -41,6 +41,9 @@ public class PlayerCursor : MonoBehaviour
     private void Awake() {
         body = GetComponent<Rigidbody2D>();
         player = GetComponent<PlayerInput>();
+        render = GetComponent<SpriteRenderer>();
+
+        render.color = GameManager.GetPlayerColorFromID(playerID);
     }
 
     private void Update() {
@@ -51,11 +54,9 @@ public class PlayerCursor : MonoBehaviour
         transform.position = pos;
         targetedStar = GetClosestStar();
 
-        if (velocity.sqrMagnitude <= 0.0 && targetedStar != null) {
-            lerpTime = Mathf.Max(lerpTime - lerpSpeed * Time.deltaTime, 0.0f);
-            transform.position = Vector3.Lerp(transform.position, targetedStar.transform.position, lerpTime);
-        } else {
-            lerpTime = 1.0f;
+        // Lerping position when on Gamepad
+        if (player.currentControlScheme == "Gamepad" && targetedStar != null && velocity.sqrMagnitude <= 0.0) {
+            transform.position = Vector3.Lerp(transform.position, targetedStar.transform.position, lerpSpeed * Time.deltaTime);
         }
 
         transform.position = ScreenBounds.LimitPosition(transform.position);
@@ -122,7 +123,8 @@ public class PlayerCursor : MonoBehaviour
                 target_star.playerID < 0 ||
                 target_star.playerID == playerID
             ) &&
-            target_star.connectedStars.Count < target_star.connectedStarsMax
+            target_star.connectedStars.Count < target_star.connectedStarsMax &&
+            !target_star.insideZone
         );
     }
 

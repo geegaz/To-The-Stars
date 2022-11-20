@@ -8,12 +8,14 @@ public class LineTracer : MonoBehaviour
     public int playerID = 0;
 
     [SerializeField]
+    private ContactFilter2D filter;
+    [SerializeField]
     private float speed = 1.0f;
     [SerializeField]
     private Transform tracer; 
 
-    private LineRenderer renderer;
-    private EdgeCollider2D collider;
+    private LineRenderer render;
+    private EdgeCollider2D col;
     public Star startStar;
     public Star endStar;
 
@@ -21,103 +23,87 @@ public class LineTracer : MonoBehaviour
     private Vector2 direction = Vector2.zero;
 
     private void Awake() {
-        renderer = GetComponent<LineRenderer>();
-        collider = GetComponent<EdgeCollider2D>();
+        render = GetComponent<LineRenderer>();
+        col = GetComponent<EdgeCollider2D>();
+
+        render.material.SetColor("_Color", GameManager.GetPlayerColorFromID(playerID));
     }
 
     private void Start() {
-        SetLinePosition(0, transform.position);
-        SetLinePosition(1, transform.position);
-
-        if (endStar != null) {
-            direction = (endStar.transform.position - transform.position).normalized;
-            endStar.OnConnect.AddListener(OnStarConnect);
-        }
-        if (startStar != null) {
-            startStar.OnConnect.AddListener(OnStarConnect);
-        }
-
-        if (tracer != null) {
-            tracer.transform.right = direction;
-        }
+        direction = (endStar.transform.position - transform.position).normalized;
+        startStar.OnConnect.AddListener(OnStarConnect);
+        transform.right = direction;
     }
 
     private void FixedUpdate()
     {
         if (tracer != null) {
-            // TODO: Fix raycast not detecting stars
-            /* 
-            What happens is that the raycast hits the LineTracer's own collider first,
-            which stops the line from detecting the star.
-            Best solution would be to ignore selectively the LineTracer's collider, but
-            it doesn't seem to be an option...
-            Another one would be to add a script and a trigger to the tracer and detect
-            when it enters the correct star, but it's kinda heavy.
-            Last one is an ugly hack which consists of switching the collider to the 
-            "Ignore Raycast" layer before doing the raycast, or disabling it temporarily. 
-            Will probably work fine though, so I think I'll go with it :')
-            */
-            RaycastHit2D hit = Physics2D.Raycast(tracer.transform.position, direction, speed * Time.deltaTime);
-            Collider2D col = hit.collider;
-            if (col != null && col != collider) {
-                Star hitStar = col.GetComponent<Star>();
+            RaycastHit2D[] hits = new RaycastHit2D[1];
+            if (col.Raycast(direction, filter, hits, speed * Time.deltaTime) > 0) {
+                Collider2D _col = hits[0].collider;
+                Star hitStar = _col.GetComponent<Star>();
                 if (hitStar != null) {
-                    if (endStar && hitStar == endStar) {
+                    if (hitStar == endStar) {
                         TryConnectLine();
                     }
                 } else {
+                    Debug.Log("Destroying line "+this+", hit something");
                     StopLine();
                 }
             }
-            Vector3 pos = tracer.transform.position;
             velocity = direction * speed;
+            Vector3 pos = transform.position;
             pos.x += velocity.x * Time.deltaTime;
             pos.y += velocity.y * Time.deltaTime;
-            tracer.transform.position = pos;
+            transform.position = pos;
 
-            SetLinePosition(1, tracer.transform.position);
+            UpdateLine();
         }
     }
 
+    private void UpdateLine() {
+        render.SetPosition(0, startStar.transform.position);
+        render.SetPosition(1, transform.position);
+        
+        float distance = Vector2.Distance(startStar.transform.position, transform.position);
+        Vector2[] points = {
+            Vector2.zero,
+            Vector2.left * distance
+        };
+        col.points = points;
+    }
+
     private void StopLine() {
-        // Can be done safely, no other object is referencing this one
+        // Can be done safely, no other object should be referencing this one
         Destroy(this.gameObject);
     }
 
     private void TryConnectLine() {
-        if (CanConnectLine()) {
-            Debug.Log("Connecting line");
+        if (CanConnectTo(endStar)) {
             startStar.Connect(endStar, playerID);
-            SetLinePosition(1, endStar.transform.position);
-
+            // Reposition line
+            transform.position = endStar.transform.position;
+            UpdateLine();
+            // Remove the tracing visual
             Destroy(tracer.gameObject);
             tracer = null;
         } else {
+            Debug.Log("Destroying line "+this+", can't connect to end star");
             StopLine();
         }
     }
 
-    private bool CanConnectLine() {
-        return (
-            endStar.connectedStars.Count < endStar.connectedStarsMax &&
-            (endStar.playerID < 0 || endStar.playerID == playerID)
-        );
-    }
-
     public void OnStarConnect() {
-        if (startStar != null) {
-            if (!(startStar.playerID < 0 || startStar.playerID == playerID)) {
-                StopLine();
-            }
+        if (!CanConnectTo(startStar)) {
+            Debug.Log("Destroying line "+this+", start star got taken over");
+            StopLine();
         }
     }
 
-    // position is in world space
-    private void SetLinePosition(int index, Vector3 position) {
-        renderer.SetPosition(index, position);
-
-        Vector2[] points = collider.points;
-        points[index] = position - transform.position;
-        collider.points = points;
+    private bool CanConnectTo(Star star) {
+        return (
+            star.connectedStars.Count < star.connectedStarsMax &&
+            (star.playerID < 0 || star.playerID == playerID)
+        );
     }
 }

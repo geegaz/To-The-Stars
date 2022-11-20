@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8020076653990277226}
   - component: {fileID: 7093128648599420272}
   - component: {fileID: 7093128648599420275}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Player Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,8 +168,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 0
-  nearbyStars: []
+  playerColor: {r: 0, g: 0, b: 0, a: 0}
   movementSpeed: 10
-  lerpSpeed: 0.01
+  lerpSpeed: 10
+  nearbyStars: []
+  targetedStar: {fileID: 0}
   selectCursorPrefab: {fileID: 1157548104684318291, guid: 4b4b01f3953769a4aa80228d81fa3658, type: 3}
+  select: {fileID: 0}
   lineTracerPrefab: {fileID: 4693408757141803925, guid: 2dba86caf5a2a0d488b7cd5723d269b3, type: 3}
