@@ -58,21 +58,12 @@ public class PlayerCursor : MonoBehaviour
         if (player.currentControlScheme == "Gamepad" && targetedStar != null && velocity.sqrMagnitude <= 0.0) {
             transform.position = Vector3.Lerp(transform.position, targetedStar.transform.position, lerpSpeed * Time.deltaTime);
         }
+        if (select != null) {
+            select.transform.position = transform.position;
+        }
 
         transform.position = ScreenBounds.LimitPosition(transform.position);
     }
-    
-    /*
-     Worked fine with a gamepad, 
-     but gave jittery movement with a mouse
-    */
-    // private void FixedUpdate() {
-    //     Vector2 pos = body.position;
-    //     pos.x += velocity.x * Time.deltaTime;
-    //     pos.y += velocity.y * Time.deltaTime;
-
-    //     body.MovePosition(pos);
-    // }
 
     private Star GetClosestStar() {
         Vector3 pos = transform.position;
@@ -91,7 +82,7 @@ public class PlayerCursor : MonoBehaviour
         return closestStar;
     }
 
-    private void SelectStar() {
+    private void TrySelect() {
         if (targetedStar != null) {
             select = Instantiate<SelectCursor>(
                 selectCursorPrefab, 
@@ -102,21 +93,22 @@ public class PlayerCursor : MonoBehaviour
         }
     }
 
-    private void StartLine() {
-        if (!(targetedStar == null || targetedStar == select.star || targetedStar.connectedStars.Contains(select.star))) {
-
-            LineTracer line = Instantiate(lineTracerPrefab, select.star.transform.position, select.star.transform.rotation);
-            line.startStar = select.star;
-            line.endStar = targetedStar;
-            line.playerID = playerID;
-
+    private void TryStart() {
+        if (select != null) {
+            if (targetedStar != null) {
+                LineTracer line = Instantiate(lineTracerPrefab, select.star.transform.position, select.star.transform.rotation);
+                line.startStar = select.star;
+                line.endStar = targetedStar;
+                line.playerID = playerID;
+                Debug.Log("Started line");
+            }
             Destroy(select.gameObject);
             select = null;
-            Debug.Log("Started line");
         }
     }
 
     private bool IsValidStar(Star target_star, Star compare_star = null) {
+        bool selectValid = select != null ? !(target_star.connectedStars.Contains(select.star) || target_star == select.star) : true;
         return (
             target_star != compare_star &&
             (
@@ -124,9 +116,35 @@ public class PlayerCursor : MonoBehaviour
                 target_star.playerID == playerID
             ) &&
             target_star.connectedStars.Count < target_star.connectedStarsMax &&
-            !target_star.claimed
+            !target_star.claimed &&
+            selectValid
         );
     }
+
+    // private void SelectStar() {
+    //     if (targetedStar != null) {
+    //         select = Instantiate<SelectCursor>(
+    //             selectCursorPrefab, 
+    //             targetedStar.transform.position, 
+    //             targetedStar.transform.rotation
+    //         );
+    //         select.star = targetedStar;
+    //     }
+    // }
+
+    // private void StartLine() {
+    //     if (!(targetedStar == null || targetedStar == select.star || targetedStar.connectedStars.Contains(select.star))) {
+
+    //         LineTracer line = Instantiate(lineTracerPrefab, select.star.transform.position, select.star.transform.rotation);
+    //         line.startStar = select.star;
+    //         line.endStar = targetedStar;
+    //         line.playerID = playerID;
+
+    //         Destroy(select.gameObject);
+    //         select = null;
+    //         Debug.Log("Started line");
+    //     }
+    // }
 
     private void OnMove(InputValue value) {
         Vector2 movementVector = value.Get<Vector2>();
@@ -135,17 +153,17 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnActivate(InputValue value) {
         if (value.isPressed) {
-            //TrySelect()
+            TrySelect();
         } else {
-            //TryStart()
+            TryStart();
         }
-        if (!value.isPressed) return;
+        // if (!value.isPressed) return;
 
-        if (select != null) {
-            StartLine();
-        } else {
-            SelectStar();
-        }
+        // if (select != null) {
+        //     StartLine();
+        // } else {
+        //     SelectStar();
+        // }
     }
 
     private void OnEndGame(InputValue value) {

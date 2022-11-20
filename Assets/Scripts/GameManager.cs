@@ -83,7 +83,9 @@ public class GameManager : MonoBehaviour
 
     private void EndGame() {
         Debug.Log("It's the end !");
-        ScreenCapture.CaptureScreenshot("ToTheStars_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+".png");
+        if (!Application.isEditor){
+            ScreenCapture.CaptureScreenshot("ToTheStars_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+".png");
+        }
         if (starsManager != null) {
             foreach (PlayerCursor player in players)
             {
