@@ -168,7 +168,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 0
-  playerColor: {r: 0, g: 0, b: 0, a: 0}
   movementSpeed: 10
   lerpSpeed: 10
   nearbyStars: []

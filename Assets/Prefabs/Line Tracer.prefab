@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 4693408756931779957}
   - component: {fileID: 4693408756931779959}
   - component: {fileID: 4693408756931779958}
-  - component: {fileID: 8152094566060056513}
-  - component: {fileID: 5879221810197753660}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Untagged
@@ -27,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4693408756931779956}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4693408757141803924}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &4693408756931779959
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -76,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 77398032, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,57 +97,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 109baa679a4dc1d4ba3b99bb152a83a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animations: []
-  framerate: 6
---- !u!114 &8152094566060056513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4693408756931779956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -436963984
-      Data2: 1215814213
-      Data3: 1690389664
-      Data4: 1152539367
-    Path: event:/Players/PlayerLine
-  Event: 
-  PlayEvent: 1
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
---- !u!114 &5879221810197753660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4693408756931779956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  Emitters:
-  - Target: {fileID: 8152094566060056513}
-    Params:
-    - Name: LineDone
-      Value: 1
-  TriggerEvent: 2
+  playerID: 0
+  idleFrames:
+  - {fileID: 77398032, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  - {fileID: -219654432, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  - {fileID: -1822408641, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  - {fileID: 1584535940, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  flapFrames:
+  - {fileID: -912678416, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  - {fileID: 819646921, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  - {fileID: -1988028405, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  - {fileID: 610143373, guid: 7ea0a5199e8eb294fa4b27858209c07a, type: 3}
+  previousAnimAffect: 0.1
+  framerate: 8
 --- !u!1 &4693408757141803922
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,31 +197,13 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.29999924
+        value: 0.10000229
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.5
-        value: 0.100001395
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0.29999924
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -351,7 +293,8 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  margin: 0.05
   speed: 1
-  tracer: {fileID: 4693408756931779957}
+  tracer: {fileID: 4693408756931779958}
   startStar: {fileID: 0}
   endStar: {fileID: 0}

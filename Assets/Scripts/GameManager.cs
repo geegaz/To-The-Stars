@@ -5,6 +5,17 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]
+    private float endGameTime = 20.0f;
+    private bool endGame = false;
+    private float remainingTime = 0.0f;
+
+    [SerializeField]
+    private GameObject endGameScreen;
+    [SerializeField]
+    private StarsManager starsManager;
+
+
     public List<PlayerCursor> players;
     public List<Color> playerColors;
     
@@ -18,6 +29,15 @@ public class GameManager : MonoBehaviour
 
     private void Awake() {
         _instance = this;
+    }
+
+    private void Update() {
+        if (endGame && remainingTime > 0.0f) {
+            remainingTime -= Time.deltaTime;
+            if (remainingTime <= 0.0f) {
+                EndGame();
+            }
+        }
     }
 
     private void OnPlayerJoined(PlayerInput playerInput) {
@@ -51,5 +71,24 @@ public class GameManager : MonoBehaviour
             return instance.playerColors[id];
         }
         else return Color.white;
+    }
+
+    public static void AskForEndGame() {
+        if (!instance.endGame) {
+            Debug.Log("Asked for end game");
+            instance.endGame = true;
+            instance.remainingTime = instance.endGameTime;
+        }
+    }
+
+    private void EndGame() {
+        Debug.Log("It's the end !");
+        ScreenCapture.CaptureScreenshot("ToTheStars_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+".png");
+        if (starsManager != null) {
+            foreach (PlayerCursor player in players)
+            {
+                Debug.Log("Player "+player.playerID+": "+starsManager.GetPlayerScore(player.playerID));
+            }
+        }
     }
 }

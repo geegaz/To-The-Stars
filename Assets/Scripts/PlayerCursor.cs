@@ -134,6 +134,11 @@ public class PlayerCursor : MonoBehaviour
     }
 
     private void OnActivate(InputValue value) {
+        if (value.isPressed) {
+            //TrySelect()
+        } else {
+            //TryStart()
+        }
         if (!value.isPressed) return;
 
         if (select != null) {
@@ -141,6 +146,10 @@ public class PlayerCursor : MonoBehaviour
         } else {
             SelectStar();
         }
+    }
+
+    private void OnEndGame(InputValue value) {
+        GameManager.AskForEndGame();
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
