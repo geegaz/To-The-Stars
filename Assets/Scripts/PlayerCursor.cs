@@ -124,7 +124,7 @@ public class PlayerCursor : MonoBehaviour
                 target_star.playerID == playerID
             ) &&
             target_star.connectedStars.Count < target_star.connectedStarsMax &&
-            !target_star.insideZone
+            !target_star.claimed
         );
     }
 

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class Star : MonoBehaviour
 {
     public int playerID = -1;
-    public bool insideZone = false;
+    public bool claimed = false;
 
     public UnityEvent OnConnect = new UnityEvent();
 
@@ -23,14 +23,17 @@ public class Star : MonoBehaviour
         connectedStars.Add(otherStar);
         otherStar.connectedStars.Add(this);
         if (playerID < 0) {
-            playerID = _playerID;
-            render.color = GameManager.GetPlayerColorFromID(playerID);
-            otherStar.render.color = render.color;
+            SetOwner(_playerID);
         }
         if (otherStar.playerID < 0) {
-            otherStar.playerID = _playerID;
+            otherStar.SetOwner(_playerID);
         }
 
         if (OnConnect != null) OnConnect.Invoke();
+    }
+
+    public void SetOwner(int id) {
+        playerID = id;
+        render.color = GameManager.GetPlayerColorFromID(playerID);
     }
 }
