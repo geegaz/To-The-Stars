@@ -14,6 +14,7 @@ public class Star : MonoBehaviour
     public int connectedStarsMax = 2;
 
     private SpriteRenderer render;
+    [HideInInspector] public StarsManager manager;
 
     private void Awake() {
         render = GetComponent<SpriteRenderer>();
@@ -23,6 +24,12 @@ public class Star : MonoBehaviour
     public void Connect(Star other, int _playerID) {
         _Connect(other, _playerID);
         other._Connect(this, _playerID);
+
+        // If the other star has reached the max number of connexions, it's possible the shape was just closed
+        // Then, send an event to try to create a zone
+        if (other.connectedStars.Count == connectedStarsMax && manager != null) {
+            manager.TryCreateZone(this, other);
+        }
     }
 
     // Used internally
@@ -40,10 +47,10 @@ public class Star : MonoBehaviour
     }
 
     public bool GetNext(Star start, Star previous, List<Star> list) {
+        list.Add(this);
         foreach (Star star in connectedStars)
         {
             if (star != previous) {
-                list.Add(star);
                 if (star == start) {
                     return true;
                 } else {

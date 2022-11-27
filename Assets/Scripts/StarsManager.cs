@@ -10,6 +10,7 @@ public class StarsManager : MonoBehaviour
     [SerializeField] private StarZone starZonePrefab;
 
     public List<Star> stars = new List<Star>();
+    public List<StarZone> starZones = new List<StarZone>();
 
     private void Start() {
         GenerateStars();
@@ -32,9 +33,24 @@ public class StarsManager : MonoBehaviour
                 if (starPrefab != null) {
                     Star newStar = Instantiate<Star>(starPrefab, finalPos, Quaternion.identity, transform);
                     stars.Add(newStar);
+
+                    newStar.manager = this;
                 }
             }
         }
+    }
+
+    public void TryCreateZone(Star start, Star next) {
+        string logText = "Trying to create a new zone...\n";
+        
+        List<Star> linkedStars = new List<Star>();
+        if (next.GetNext(start, start, linkedStars)) {
+            linkedStars.Add(start);
+            logText += "...A zone was created !";
+        } else logText += "...The zone can't be created.";
+        logText += string.Format(" {0} stars were linked", linkedStars.Count);
+
+        Debug.Log(logText);
     }
 
     public void ClaimStarsInZone(PolygonCollider2D poly, int playerID) {
@@ -54,10 +70,5 @@ public class StarsManager : MonoBehaviour
             if (star.playerID == playerID) score++;
         }
         return score;
-    }
-
-    private void OnStarConnect(Star from, Star to) {
-        List<Star> stars = new List<Star>();
-
     }
 }
