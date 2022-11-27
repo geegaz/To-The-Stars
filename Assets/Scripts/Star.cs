@@ -54,7 +54,7 @@ public class Star : MonoBehaviour
         return false;
     }
 
-    public bool CanConnect(int _playerID) {
+    public bool CanConnect(int id) {
         /*
         * Conditions for connecting a star:
         * - there are less than 2 stars already connected to it
@@ -63,19 +63,19 @@ public class Star : MonoBehaviour
         */
         return (
             connectedStars.Count < connectedStarsMax &&
-            (playerID < 0 || playerID == _playerID) &&
+            (playerID < 0 || playerID == id) &&
             !inZone
         );
     }
 
-    public bool CanConnectTo(int _playerID, Star other = null) {
+    public bool CanConnectTo(int id, Star other = null) {
         /* 
         * Additional checks for connecting to another star, checks if:
         * - this star is different from the other
         * - this star is not already connected to the other
         */
         return (
-            CanConnect(_playerID) &&
+            CanConnect(id) &&
             this != other && !connectedStars.Contains(other)
         );
     }

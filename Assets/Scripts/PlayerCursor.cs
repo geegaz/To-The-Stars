@@ -63,7 +63,7 @@ public class PlayerCursor : MonoBehaviour
         // Handling selection while a star is selected
         if (select != null) {
             select.transform.position = transform.position;
-            if (select.star.connectedStars.Count >= select.star.connectedStarsMax) {
+            if (!select.star.CanConnect(playerID)) {
                 Destroy(select.gameObject);
                 select = null;
             }
