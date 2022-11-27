@@ -19,17 +19,19 @@ public class Star : MonoBehaviour
         render = GetComponent<SpriteRenderer>();
     }
 
-    public void Connect(Star otherStar, int _playerID) {
-        connectedStars.Add(otherStar);
-        otherStar.connectedStars.Add(this);
+    // Used by other classes
+    public void Connect(Star other, int _playerID) {
+        _Connect(other, _playerID);
+        other._Connect(this, _playerID);
+    }
+
+    // Used internally
+    private void _Connect(Star other, int _playerID){
+        connectedStars.Add(other);
         if (playerID < 0) {
             SetOwner(_playerID);
         }
-        if (otherStar.playerID < 0) {
-            otherStar.SetOwner(_playerID);
-        }
-
-        if (OnConnect != null) OnConnect.Invoke(this, otherStar);
+        if (OnConnect != null) OnConnect.Invoke(this, other);
     }
 
 
@@ -55,12 +57,13 @@ public class Star : MonoBehaviour
 
     public bool CanConnect(int _playerID, Star other = null) {
         /*
-        * Conditions for targeting a star:
-        * - the star is different from the other given star
+        * Conditions for connecting a star:
+        * - the star is different from the other given star (e.g. not itself)
         * - there are less than 2 stars already connected to it
         * - the star is either not claimed yet, or is already claimed by the same player
         * - the star is not inside a zone
         */
+        // If no other star is given, this function 
         if (other == null) return (
             connectedStars.Count < connectedStarsMax &&
             (playerID < 0 || playerID == _playerID) &&
@@ -70,8 +73,7 @@ public class Star : MonoBehaviour
             connectedStars.Count < connectedStarsMax &&
             (playerID < 0 || playerID == _playerID) &&
             !inZone &&
-            this != other && 
-            !connectedStars.Contains(other)
+            this != other && !connectedStars.Contains(other)
         );
     }
 }

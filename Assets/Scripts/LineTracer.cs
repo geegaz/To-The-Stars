@@ -7,14 +7,10 @@ public class LineTracer : MonoBehaviour
 {
     public int playerID = 0;
 
-    [SerializeField]
-    private ContactFilter2D filter;
-    [SerializeField]
-    private float margin = 0.05f;
-    [SerializeField]
-    private float speed = 1.0f;
-    [SerializeField]
-    private TracerBird tracer; 
+    [SerializeField] private ContactFilter2D filter;
+    [SerializeField] private float margin = 0.05f;
+    [SerializeField] private float speed = 1.0f;
+    [SerializeField] private TracerBird tracer; 
 
     private LineRenderer render;
     private EdgeCollider2D collide;
@@ -49,7 +45,6 @@ public class LineTracer : MonoBehaviour
             RaycastHit2D[] hits = new RaycastHit2D[1];
             if (collide.Raycast(direction, filter, hits, speed * Time.deltaTime) > 0) {
                 Collider2D col = hits[0].collider;
-                
                 Star hitStar = col.GetComponent<Star>();
                 if (hitStar != null) {
                     if (hitStar == endStar) {
@@ -89,7 +84,8 @@ public class LineTracer : MonoBehaviour
     }
 
     private void TryConnectLine() {
-        if (CanConnectTo(endStar)) {
+        // If the end line was already taken over, stop the line
+        if (endStar.CanConnect(playerID)) {
             startStar.Connect(endStar, playerID);
 
             // Reposition line
@@ -106,22 +102,11 @@ public class LineTracer : MonoBehaviour
     }
 
     public void OnStarConnect(Star from, Star to) {
-        // If the starting star was connected, 
-        if (!(CanConnectTo(startStar) || startStar.connectedStars.Contains(endStar))) {
+        // If the starting star was connected by another player, stop the line
+        // Needs an additional condition for when the LineTracer connects its own stars
+        if (!(to == endStar || from == startStar || from.CanConnect(playerID))) {
             Debug.Log("Destroying line "+this+", start star got taken over");
             StopLine();
         }
-    }
-
-    private bool CanConnectTo(Star star) {
-        /*
-        * Conditions for connecting from/to a star:
-        * - there are less than 2 stars already connected to it
-        * - the star is either not claimed yet, or is already claimed by the same player
-        */
-        return (
-            star.connectedStars.Count < star.connectedStarsMax &&
-            (star.playerID < 0 || star.playerID == playerID)
-        );
     }
 }
