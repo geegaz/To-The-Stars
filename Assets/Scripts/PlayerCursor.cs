@@ -75,13 +75,16 @@ public class PlayerCursor : MonoBehaviour
     private Star GetClosestStar() {
         Vector3 pos = transform.position;
         
+        Star selectedStar = null;
+        if (select != null) selectedStar = select.star;
+        
         Star closestStar = null;
         float closestDistance = 0.0f;
         foreach (Star nearbyStar in nearbyStars)
         {
             Vector3 starPos = nearbyStar.transform.position;
             float starDist = Vector3.Distance(starPos, pos);
-            if ((closestStar == null || starDist < closestDistance) && IsValidStar(nearbyStar)) {
+            if ((closestStar == null || starDist < closestDistance) && nearbyStar.CanConnect(playerID, selectedStar)) {
                 closestStar = nearbyStar;
                 closestDistance = starDist;
             }

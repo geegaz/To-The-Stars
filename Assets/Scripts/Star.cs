@@ -34,7 +34,6 @@ public class Star : MonoBehaviour
         if (OnConnect != null) OnConnect.Invoke(this, other);
     }
 
-
     public void SetOwner(int id) {
         playerID = id;
         render.color = GameManager.GetPlayerColorFromID(playerID);
@@ -58,12 +57,14 @@ public class Star : MonoBehaviour
     public bool CanConnect(int _playerID, Star other = null) {
         /*
         * Conditions for connecting a star:
-        * - the star is different from the other given star (e.g. not itself)
         * - there are less than 2 stars already connected to it
         * - the star is either not claimed yet, or is already claimed by the same player
         * - the star is not inside a zone
+        *
+        * If another star is given, also checks if:
+        * - the star is different from the other
+        * - the star is not already connected to the other
         */
-        // If no other star is given, this function 
         if (other == null) return (
             connectedStars.Count < connectedStarsMax &&
             (playerID < 0 || playerID == _playerID) &&
