@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class StarsManager : MonoBehaviour
 {
-    [SerializeField]
-    private Rect starsRect;
-    [SerializeField]
-    private Vector2 ColumnsAndRows = new Vector2(8, 5);
-    [SerializeField]
-    private Star starPrefab;
+    [SerializeField] private Rect starsRect;
+    [SerializeField] private Vector2 ColumnsAndRows = new Vector2(8, 5);
+    [SerializeField] private Star starPrefab;
+    [SerializeField] private StarZone starZonePrefab;
+
     public List<Star> stars = new List<Star>();
 
     private void Start() {
@@ -31,18 +30,18 @@ public class StarsManager : MonoBehaviour
                 finalPos = starsRect.position + (finalPos + offset) * stepSize;
 
                 if (starPrefab != null) {
-                    Star newStar = Instantiate<Star>(starPrefab, finalPos, Quaternion.identity);
+                    Star newStar = Instantiate<Star>(starPrefab, finalPos, Quaternion.identity, transform);
                     stars.Add(newStar);
                 }
             }
         }
     }
 
-    public void ClaimStarsInPolygon(PolygonCollider2D poly, int playerID) {
+    public void ClaimStarsInZone(PolygonCollider2D poly, int playerID) {
         foreach (Star star in stars)
         {
             if (poly.OverlapPoint(star.transform.position)) {
-                star.claimed = true;
+                star.inZone = true;
                 star.SetOwner(playerID);
             }
         }
@@ -58,6 +57,7 @@ public class StarsManager : MonoBehaviour
     }
 
     private void OnStarConnect(Star from, Star to) {
+        List<Star> stars = new List<Star>();
 
     }
 }

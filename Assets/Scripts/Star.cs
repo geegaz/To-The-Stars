@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class Star : MonoBehaviour
 {
     public int playerID = -1;
-    public bool claimed = false;
+    public bool inZone = false;
 
     public UnityEvent<Star, Star> OnConnect = new UnityEvent<Star, Star>();
 
@@ -32,23 +32,46 @@ public class Star : MonoBehaviour
         if (OnConnect != null) OnConnect.Invoke(this, otherStar);
     }
 
+
     public void SetOwner(int id) {
         playerID = id;
         render.color = GameManager.GetPlayerColorFromID(playerID);
     }
 
-    public bool GetNext(Star start, List<Star> list) {
+    public bool GetNext(Star start, Star previous, List<Star> list) {
         foreach (Star star in connectedStars)
         {
-            if (star != this) {
+            if (star != previous) {
+                list.Add(star);
                 if (star == start) {
                     return true;
                 } else {
-                    list.Add(star);
-                    return star.GetNext(start, list);
+                    return star.GetNext(start, this, list);
                 }
             }
         }
         return false;
+    }
+
+    public bool CanConnect(int _playerID, Star other = null) {
+        /*
+        * Conditions for targeting a star:
+        * - the star is different from the other given star
+        * - there are less than 2 stars already connected to it
+        * - the star is either not claimed yet, or is already claimed by the same player
+        * - the star is not inside a zone
+        */
+        if (other == null) return (
+            connectedStars.Count < connectedStarsMax &&
+            (playerID < 0 || playerID == _playerID) &&
+            !inZone
+        );
+        else return (
+            connectedStars.Count < connectedStarsMax &&
+            (playerID < 0 || playerID == _playerID) &&
+            !inZone &&
+            this != other && 
+            !connectedStars.Contains(other)
+        );
     }
 }

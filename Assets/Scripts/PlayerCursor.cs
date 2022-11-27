@@ -42,7 +42,9 @@ public class PlayerCursor : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         player = GetComponent<PlayerInput>();
         render = GetComponent<SpriteRenderer>();
+    }
 
+    private void Start() {
         render.color = GameManager.GetPlayerColorFromID(playerID);
     }
 
@@ -58,8 +60,13 @@ public class PlayerCursor : MonoBehaviour
         if (player.currentControlScheme == "Gamepad" && targetedStar != null && velocity.sqrMagnitude <= 0.0) {
             transform.position = Vector3.Lerp(transform.position, targetedStar.transform.position, lerpSpeed * Time.deltaTime);
         }
+        // Handling selection while a star is selected
         if (select != null) {
             select.transform.position = transform.position;
+            if (select.star.connectedStars.Count >= select.star.connectedStarsMax) {
+                Destroy(select.gameObject);
+                select = null;
+            }
         }
 
         transform.position = ScreenBounds.LimitPosition(transform.position);
@@ -100,7 +107,6 @@ public class PlayerCursor : MonoBehaviour
                 line.startStar = select.star;
                 line.endStar = targetedStar;
                 line.playerID = playerID;
-                Debug.Log("Started line");
             }
             Destroy(select.gameObject);
             select = null;
@@ -108,7 +114,7 @@ public class PlayerCursor : MonoBehaviour
     }
 
     private bool IsValidStar(Star target_star, Star compare_star = null) {
-        bool selectValid = select != null ? !(target_star.connectedStars.Contains(select.star) || target_star == select.star) : true;
+        bool isSameStarSelected = select != null ? target_star.connectedStars.Contains(select.star) || target_star == select.star : false;
         return (
             target_star != compare_star &&
             (
@@ -116,8 +122,8 @@ public class PlayerCursor : MonoBehaviour
                 target_star.playerID == playerID
             ) &&
             target_star.connectedStars.Count < target_star.connectedStarsMax &&
-            !target_star.claimed &&
-            selectValid
+            !target_star.inZone &&
+            !isSameStarSelected
         );
     }
 
@@ -157,17 +163,14 @@ public class PlayerCursor : MonoBehaviour
         } else {
             TryStart();
         }
-        // if (!value.isPressed) return;
-
-        // if (select != null) {
-        //     StartLine();
-        // } else {
-        //     SelectStar();
-        // }
     }
 
     private void OnEndGame(InputValue value) {
         GameManager.AskForEndGame();
+    }
+
+    public void OnSelectedStarConnect() {
+
     }
 
     private void OnTriggerEnter2D(Collider2D other) {

@@ -17,7 +17,7 @@ public class LineTracer : MonoBehaviour
     private TracerBird tracer; 
 
     private LineRenderer render;
-    private EdgeCollider2D col;
+    private EdgeCollider2D collide;
     public Star startStar;
     public Star endStar;
 
@@ -26,26 +26,31 @@ public class LineTracer : MonoBehaviour
 
     private void Awake() {
         render = GetComponent<LineRenderer>();
-        col = GetComponent<EdgeCollider2D>();
-        
-        tracer.playerID = playerID;
+        collide = GetComponent<EdgeCollider2D>();
     }
 
     private void Start() {
+        Color playerColor = GameManager.GetPlayerColorFromID(playerID);
+        Color playerLineColor = Color.Lerp(playerColor, new Color(1.0f, 1.0f, 1.0f, 0.0f), 0.5f);
+        tracer.render.color = playerColor;
+        render.startColor = playerLineColor;
+        render.endColor = playerLineColor;
+
         direction = (endStar.transform.position - transform.position).normalized;
-        startStar.OnConnect.AddListener(OnStarConnect);
         transform.right = direction;
 
-        render.colorGradient = CreateGradient(GameManager.GetPlayerColorFromID(playerID));
+        startStar.OnConnect.AddListener(OnStarConnect);
     }
 
     private void FixedUpdate()
     {
+        // Only runs when the line is being traced
         if (tracer != null) {
             RaycastHit2D[] hits = new RaycastHit2D[1];
-            if (col.Raycast(direction, filter, hits, speed * Time.deltaTime) > 0) {
-                Collider2D _col = hits[0].collider;
-                Star hitStar = _col.GetComponent<Star>();
+            if (collide.Raycast(direction, filter, hits, speed * Time.deltaTime) > 0) {
+                Collider2D col = hits[0].collider;
+                
+                Star hitStar = col.GetComponent<Star>();
                 if (hitStar != null) {
                     if (hitStar == endStar) {
                         TryConnectLine();
@@ -69,13 +74,13 @@ public class LineTracer : MonoBehaviour
         float distance = Vector3.Distance(startStar.transform.position, transform.position);
         
         render.SetPosition(0, Vector3.left * margin);
-        render.SetPosition(1, Vector3.left * (distance - margin * 2.0f));
+        render.SetPosition(1, Vector3.left * (distance - margin));
 
         Vector2[] points = {
-            Vector3.left * margin,
-            Vector2.left * (distance - margin * 2.0f)
+            Vector2.left * margin,
+            Vector2.left * (distance - margin)
         };
-        col.points = points;
+        collide.points = points;
     }
 
     private void StopLine() {
@@ -86,9 +91,11 @@ public class LineTracer : MonoBehaviour
     private void TryConnectLine() {
         if (CanConnectTo(endStar)) {
             startStar.Connect(endStar, playerID);
+
             // Reposition line
             transform.position = endStar.transform.position;
-            //UpdateLine();
+            UpdateLine();
+
             // Remove the tracing visual
             Destroy(tracer.gameObject);
             tracer = null;
@@ -98,26 +105,20 @@ public class LineTracer : MonoBehaviour
         }
     }
 
-    private Gradient CreateGradient(Color color) {
-        Gradient gradient = new Gradient();
-        GradientColorKey[] colorKeys = new GradientColorKey[1];
-        GradientAlphaKey[] alphaKeys = new GradientAlphaKey[1];
-        colorKeys[0].color = color;
-        colorKeys[0].time = 0.0f;
-        alphaKeys[0].alpha = color.a;
-        alphaKeys[0].time = 0.0f;
-
-        return gradient;
-    }
-
     public void OnStarConnect(Star from, Star to) {
-        if (!CanConnectTo(startStar) && !startStar.connectedStars.Contains(endStar)) {
+        // If the starting star was connected, 
+        if (!(CanConnectTo(startStar) || startStar.connectedStars.Contains(endStar))) {
             Debug.Log("Destroying line "+this+", start star got taken over");
             StopLine();
         }
     }
 
     private bool CanConnectTo(Star star) {
+        /*
+        * Conditions for connecting from/to a star:
+        * - there are less than 2 stars already connected to it
+        * - the star is either not claimed yet, or is already claimed by the same player
+        */
         return (
             star.connectedStars.Count < star.connectedStarsMax &&
             (star.playerID < 0 || star.playerID == playerID)
