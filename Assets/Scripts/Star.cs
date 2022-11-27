@@ -54,26 +54,28 @@ public class Star : MonoBehaviour
         return false;
     }
 
-    public bool CanConnect(int _playerID, Star other = null) {
+    public bool CanConnect(int _playerID) {
         /*
         * Conditions for connecting a star:
         * - there are less than 2 stars already connected to it
         * - the star is either not claimed yet, or is already claimed by the same player
         * - the star is not inside a zone
-        *
-        * If another star is given, also checks if:
-        * - the star is different from the other
-        * - the star is not already connected to the other
         */
-        if (other == null) return (
+        return (
             connectedStars.Count < connectedStarsMax &&
             (playerID < 0 || playerID == _playerID) &&
             !inZone
         );
-        else return (
-            connectedStars.Count < connectedStarsMax &&
-            (playerID < 0 || playerID == _playerID) &&
-            !inZone &&
+    }
+
+    public bool CanConnectTo(int _playerID, Star other = null) {
+        /* 
+        * Additional checks for connecting to another star, checks if:
+        * - this star is different from the other
+        * - this star is not already connected to the other
+        */
+        return (
+            CanConnect(_playerID) &&
             this != other && !connectedStars.Contains(other)
         );
     }

@@ -84,7 +84,7 @@ public class PlayerCursor : MonoBehaviour
         {
             Vector3 starPos = nearbyStar.transform.position;
             float starDist = Vector3.Distance(starPos, pos);
-            if ((closestStar == null || starDist < closestDistance) && nearbyStar.CanConnect(playerID, selectedStar)) {
+            if ((closestStar == null || starDist < closestDistance) && nearbyStar.CanConnectTo(playerID, selectedStar)) {
                 closestStar = nearbyStar;
                 closestDistance = starDist;
             }
@@ -116,45 +116,6 @@ public class PlayerCursor : MonoBehaviour
         }
     }
 
-    private bool IsValidStar(Star target_star, Star compare_star = null) {
-        bool isSameStarSelected = select != null ? target_star.connectedStars.Contains(select.star) || target_star == select.star : false;
-        return (
-            target_star != compare_star &&
-            (
-                target_star.playerID < 0 ||
-                target_star.playerID == playerID
-            ) &&
-            target_star.connectedStars.Count < target_star.connectedStarsMax &&
-            !target_star.inZone &&
-            !isSameStarSelected
-        );
-    }
-
-    // private void SelectStar() {
-    //     if (targetedStar != null) {
-    //         select = Instantiate<SelectCursor>(
-    //             selectCursorPrefab, 
-    //             targetedStar.transform.position, 
-    //             targetedStar.transform.rotation
-    //         );
-    //         select.star = targetedStar;
-    //     }
-    // }
-
-    // private void StartLine() {
-    //     if (!(targetedStar == null || targetedStar == select.star || targetedStar.connectedStars.Contains(select.star))) {
-
-    //         LineTracer line = Instantiate(lineTracerPrefab, select.star.transform.position, select.star.transform.rotation);
-    //         line.startStar = select.star;
-    //         line.endStar = targetedStar;
-    //         line.playerID = playerID;
-
-    //         Destroy(select.gameObject);
-    //         select = null;
-    //         Debug.Log("Started line");
-    //     }
-    // }
-
     private void OnMove(InputValue value) {
         Vector2 movementVector = value.Get<Vector2>();
         velocity = movementVector * movementSpeed;
@@ -170,10 +131,6 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnEndGame(InputValue value) {
         GameManager.AskForEndGame();
-    }
-
-    public void OnSelectedStarConnect() {
-
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
