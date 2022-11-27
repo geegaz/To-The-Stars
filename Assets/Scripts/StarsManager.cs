@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class StarsManager : MonoBehaviour
 {
+    [Header("Generation")]
     [SerializeField] private Rect starsRect;
     [SerializeField] private Vector2 ColumnsAndRows = new Vector2(8, 5);
+
+    [Header("Stars Management")]
     [SerializeField] private Star starPrefab;
     [SerializeField] private StarZone starZonePrefab;
 
@@ -46,21 +49,21 @@ public class StarsManager : MonoBehaviour
         List<Star> linkedStars = new List<Star>();
         if (next.GetNext(start, start, linkedStars)) {
             linkedStars.Add(start);
+
+            if (starZonePrefab != null) {
+                StarZone newStarZone = Instantiate<StarZone>(starZonePrefab, Vector3.zero, Quaternion.identity, transform);
+                starZones.Add(newStarZone);
+
+                newStarZone.stars = linkedStars;
+                newStarZone.playerID = start.playerID;
+                newStarZone.manager = this;
+            }
+
             logText += "...A zone was created !";
         } else logText += "...The zone can't be created.";
         logText += string.Format(" {0} stars were linked", linkedStars.Count);
 
         Debug.Log(logText);
-    }
-
-    public void ClaimStarsInZone(PolygonCollider2D poly, int playerID) {
-        foreach (Star star in stars)
-        {
-            if (poly.OverlapPoint(star.transform.position)) {
-                star.inZone = true;
-                star.SetOwner(playerID);
-            }
-        }
     }
 
     public int GetPlayerScore(int playerID) {

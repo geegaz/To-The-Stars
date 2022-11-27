@@ -52,4 +52,6 @@ MonoBehaviour:
     height: 10
   ColumnsAndRows: {x: 10, y: 8}
   starPrefab: {fileID: 7785138928052370233, guid: f2555c4094e613a45ae7c0deb53ccf42, type: 3}
+  starZonePrefab: {fileID: 6110834311694652860, guid: 47a4e3d4c6a3a22459547ce33a4359c8, type: 3}
   stars: []
+  starZones: []

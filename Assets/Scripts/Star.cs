@@ -5,13 +5,14 @@ using UnityEngine.Events;
 
 public class Star : MonoBehaviour
 {
+    private const int MAX_CONNECTIONS = 2;
+    
     public int playerID = -1;
     public bool inZone = false;
 
     public UnityEvent<Star, Star> OnConnect = new UnityEvent<Star, Star>();
 
     public List<Star> connectedStars;
-    public int connectedStarsMax = 2;
 
     private SpriteRenderer render;
     [HideInInspector] public StarsManager manager;
@@ -27,7 +28,7 @@ public class Star : MonoBehaviour
 
         // If the other star has reached the max number of connexions, it's possible the shape was just closed
         // Then, send an event to try to create a zone
-        if (other.connectedStars.Count == connectedStarsMax && manager != null) {
+        if (other.connectedStars.Count == MAX_CONNECTIONS && manager != null) {
             manager.TryCreateZone(this, other);
         }
     }
@@ -69,7 +70,7 @@ public class Star : MonoBehaviour
         * - the star is not inside a zone
         */
         return (
-            connectedStars.Count < connectedStarsMax &&
+            connectedStars.Count < MAX_CONNECTIONS &&
             (playerID < 0 || playerID == id) &&
             !inZone
         );

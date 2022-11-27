@@ -16,8 +16,8 @@ public class TracerBird : MonoBehaviour
     private int currentFrame = 0;
     private int currentAnim = 0;
 
-    [HideInInspector] public SpriteRenderer render;
-    [HideInInspector] public StudioParameterTrigger emitter;
+    private SpriteRenderer render;
+    private StudioParameterTrigger emitter;
 
     private void Awake() {
         render = GetComponent<SpriteRenderer>();

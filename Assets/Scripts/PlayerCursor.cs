@@ -13,29 +13,21 @@ public class PlayerCursor : MonoBehaviour
 
     // Movement variables
     [Header("Movement variables")]
-    [SerializeField]
-    private float movementSpeed = 10.0f;
-    [SerializeField]
-    private float lerpSpeed = 10f;
+    [SerializeField] private float movementSpeed = 10.0f;
+    [SerializeField] private float lerpSpeed = 10f;
     private Vector2 velocity;
-    private float lerpTime = 1.0f;
 
     // Stars variables
     [Header("Stars variables")]
-    [SerializeField]
-    private List<Star> nearbyStars = new List<Star>();
-    [SerializeField]
-    private Star targetedStar;
+    [SerializeField] private List<Star> nearbyStars = new List<Star>();
+    [SerializeField] private Star targetedStar;
 
     // Select variables
     [Header("Tracing variables")]
-    [SerializeField]
-    private SelectCursor selectCursorPrefab;
-    [SerializeField]
-    private SelectCursor select;
+    [SerializeField] private SelectCursor selectCursorPrefab;
+    [SerializeField] private SelectCursor select;
     
-    [SerializeField]
-    private LineTracer lineTracerPrefab;
+    [SerializeField] private LineTracer lineTracerPrefab;
     
     
     private void Awake() {

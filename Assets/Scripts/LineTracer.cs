@@ -26,9 +26,10 @@ public class LineTracer : MonoBehaviour
     }
 
     private void Start() {
+        SpriteRenderer tracerRender = tracer.GetComponent<SpriteRenderer>();
         Color playerColor = GameManager.GetPlayerColorFromID(playerID);
         Color playerLineColor = Color.Lerp(playerColor, new Color(1.0f, 1.0f, 1.0f, 0.0f), 0.5f);
-        tracer.render.color = playerColor;
+        tracerRender.color = playerColor;
         render.startColor = playerLineColor;
         render.endColor = playerLineColor;
 
