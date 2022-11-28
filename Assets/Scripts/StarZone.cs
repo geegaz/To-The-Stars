@@ -11,8 +11,10 @@ public class StarZone : MonoBehaviour
     private MeshRenderer render;
     private PolygonCollider2D collide;
 
+    [Header("Visuals")]
     [SerializeField] private ParticleSystem paint;
-    [SerializeField] private float paintPauseTime = 0.8f;
+    [SerializeField, Range(0.0f, 1.0f)] private float paintPauseAt = 0.8f;
+    [SerializeField] private float zoneTransparency = 0.25f;
 
     [HideInInspector] public StarsManager manager;
     
@@ -29,6 +31,9 @@ public class StarZone : MonoBehaviour
         ClaimStarsInZone();
 
         if (paint != null) {
+            float paintScale = collide.bounds.size.magnitude;
+            var main = paint.main;
+            main.startSizeMultiplier = paintScale;
             paint.Play();
         }
     }
@@ -37,7 +42,7 @@ public class StarZone : MonoBehaviour
     private void Update()
     {
         if (paint != null && paint.isPlaying) {
-            if ((paint.time / paint.main.duration) >= paintPauseTime) {
+            if ((paint.time / paint.main.duration) >= paintPauseAt) {
                 paint.Pause();
             }
         }
@@ -57,7 +62,7 @@ public class StarZone : MonoBehaviour
         Mesh zoneMesh = collide.CreateMesh(false, false);
         if (zoneMesh != null) {
             Color playerColor = GameManager.GetPlayerColorFromID(playerID);
-            playerColor.a = 0.5f;
+            playerColor.a = zoneTransparency;
             
             Color32[] zoneColors = new Color32[zoneMesh.vertexCount];
             for (int i = 0; i < zoneMesh.vertexCount; i++)
@@ -76,6 +81,17 @@ public class StarZone : MonoBehaviour
                 if (collide.OverlapPoint(star.transform.position)) {
                     star.SetOwner(playerID);
                     star.inZone = true;
+                }
+            }
+        }
+    }
+
+    public void RemoveZonesInZone() {
+        if (manager != null) {
+            foreach (StarZone zone in manager.starZones)
+            {
+                if (collide.IsTouching(zone.collide)) {
+                    
                 }
             }
         }
