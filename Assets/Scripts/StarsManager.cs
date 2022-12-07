@@ -65,13 +65,4 @@ public class StarsManager : MonoBehaviour
 
         Debug.Log(logText);
     }
-
-    public int GetPlayerScore(int playerID) {
-        int score = 0;
-        foreach (Star star in stars)
-        {
-            if (star.playerID == playerID) score++;
-        }
-        return score;
-    }
 }

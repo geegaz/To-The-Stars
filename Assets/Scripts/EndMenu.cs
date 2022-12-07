@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class EndMenu : MonoBehaviour
 {
@@ -12,21 +14,60 @@ public class EndMenu : MonoBehaviour
     [Header("Display")]
     [SerializeField] private Image endImage;
     [SerializeField] private RectTransform endScores;
+    [Space]
+    [SerializeField] private PlayerScore playerScorePrefab;
+
+    [Header("Actions")]
+    [SerializeField] private InputActionProperty quitAction;
+    [SerializeField] private InputActionProperty restartAction;
+
 
     private Texture2D screenshot;
     
     private void Awake() {
-        
+        if (quitAction.reference != null) {
+            quitAction.reference.action.performed += QuitGame;
+        } else quitAction.action.performed += QuitGame;
+        if (restartAction.reference != null) {
+            restartAction.reference.action.performed += RestartGame;
+        } else restartAction.action.performed += RestartGame;
+
     }
 
     private void OnEnable() {
-        Debug.Log("Ended game");
-        // When the menu gets enabled, means that the game is over
-        StartCoroutine("SaveScreenshot");
-        
+        DisplayEndScores();
+    }
+
+    public void DisplayEndScores() {
+        if (endScores != null) {
+            while (endScores.childCount > 0) {
+                Destroy(endScores.GetChild(0).gameObject);
+            }
+            for (int i = 0; i < GameManager.instance.players.Count; i++)
+            {
+                PlayerScore newScore = Instantiate<PlayerScore>(playerScorePrefab, endScores);
+                newScore.playerID = i;
+            }
+        }
+    }
+
+    public void RestartGame(InputAction.CallbackContext ctx) => RestartGame();
+    public void RestartGame() {
+        // Fast and ugly
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void QuitGame(InputAction.CallbackContext ctx) => QuitGame();
+
+    public void QuitGame() {
+        // Fast and ugly, but doesn't crash on WebGL :)
+        if (Application.platform != RuntimePlatform.WebGLPlayer)
+            Application.Quit();
     }
 
     IEnumerator SaveScreenshot() {
+        // Currently broken, don't use
+
         yield return new WaitForEndOfFrame();
         screenshot = ScreenCapture.CaptureScreenshotAsTexture();
         

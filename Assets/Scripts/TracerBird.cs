@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using FMODUnity;
 
 public class TracerBird : MonoBehaviour
@@ -16,11 +17,13 @@ public class TracerBird : MonoBehaviour
     private int currentFrame = 0;
     private int currentAnim = 0;
 
-    private SpriteRenderer render;
+    private SpriteRenderer spriteRender;
+    private Image imageRender;
     private StudioParameterTrigger emitter;
 
     private void Awake() {
-        render = GetComponent<SpriteRenderer>();
+        spriteRender = GetComponent<SpriteRenderer>();
+        imageRender = GetComponent<Image>();
         emitter = GetComponent<StudioParameterTrigger>();
     }
 
@@ -39,7 +42,11 @@ public class TracerBird : MonoBehaviour
                 currentFrame = 0;
                 currentAnim = Mathf.RoundToInt(Random.Range(0.0f, 1.0f) - previousAnimAffect);
             }
-            render.sprite = animations[currentAnim][currentFrame];
+            if (spriteRender != null)
+                spriteRender.sprite = animations[currentAnim][currentFrame];
+            if(imageRender != null)
+                imageRender.sprite = animations[currentAnim][currentFrame];
+            
         }
     }
 }

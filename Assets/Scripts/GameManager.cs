@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private float remainingTime = 0.0f;
 
     [SerializeField]
+    private GameObject startGameScreen;
+    [SerializeField]
     private GameObject endGameScreen;
     [SerializeField]
     private StarsManager starsManager;
@@ -42,6 +44,10 @@ public class GameManager : MonoBehaviour
     }
 
     private void OnPlayerJoined(PlayerInput playerInput) {
+        if (startGameScreen != null && startGameScreen.activeInHierarchy) {
+            startGameScreen.SetActive(false);
+        }
+
         PlayerCursor player = playerInput.GetComponent<PlayerCursor>();
         if (player != null) {
             player.playerID = players.Count;
@@ -74,6 +80,23 @@ public class GameManager : MonoBehaviour
         else return Color.white;
     }
 
+    public static int GetPlayerScore(PlayerCursor player) {
+        int id = GetPlayerID(player);
+        return GetPlayerScoreFromID(id);
+    }
+
+    public static int GetPlayerScoreFromID(int id) {
+        if (Mathf.Abs(id) < instance.playerColors.Count && instance.starsManager != null) {
+            int score = 0;
+            foreach (Star star in instance.starsManager.stars)
+            {
+                if (star.playerID == id) score++;
+            }
+            return score;
+        }
+        else return -1;
+    }
+
     public static void AskForEndGame() {
         if (!instance.endGame) {
             Debug.Log("Asked for end game");
@@ -84,14 +107,23 @@ public class GameManager : MonoBehaviour
 
     private void EndGame() {
         Debug.Log("It's the end !");
-        Time.timeScale = 0.0f;
+
+        PlayerInputManager manager = GetComponent<PlayerInputManager>();
+        manager.DisableJoining();
+
+        foreach (PlayerCursor player in players)
+        {
+            player.gameObject.SetActive(false);
+        }
+
+
         if (endGameScreen != null) {
             endGameScreen.SetActive(true);
         }
         if (starsManager != null) {
             foreach (PlayerCursor player in players)
             {
-                Debug.Log("Player "+player.playerID+": "+starsManager.GetPlayerScore(player.playerID));
+                Debug.Log("Player "+player.playerID+": "+GetPlayerScoreFromID(player.playerID));
             }
         }
     }
